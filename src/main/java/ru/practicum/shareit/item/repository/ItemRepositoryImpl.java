@@ -44,30 +44,25 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> getAll(long userId) {
-        return filterItems(item -> (item.getOwnerId() != userId), getAll());
+        return filterItems(item -> item.getOwnerId() == userId, getAll());
     }
 
     @Override
     public List<Item> getAllAvailable() {
-        return filterItems(item -> !item.getAvailable(), getAll());
+        return filterItems(item -> item.getAvailable(), getAll());
     }
 
     @Override
     public List<Item> searchItems(String text) {
         String textLowerCase = text.toLowerCase();
-        Function<Item, Item> itemNameAndDescToLowerCase = item -> {
-            item.setName(item.getName().toLowerCase());
-            item.setDescription(item.getDescription().toLowerCase());
-            return item;
-        };
-        List<Item> allAvailableItemsWithNameAndDescToLowerCase = getAllAvailable()
-                .stream()
-                .map(itemNameAndDescToLowerCase)
+        List<Item> allAvailableItems = getAllAvailable();
+        return allAvailableItems.stream()
+                .filter(item -> {
+                    String nameLower = item.getName().toLowerCase();
+                    String descLower = item.getDescription().toLowerCase();
+                    return nameLower.contains(textLowerCase) || descLower.contains(textLowerCase);
+                })
                 .toList();
-
-        Predicate<Item> filterStatement =
-                item -> !(item.getName().contains(textLowerCase) || item.getDescription().contains(textLowerCase));
-        return filterItems(filterStatement, allAvailableItemsWithNameAndDescToLowerCase);
     }
 
     @Override
@@ -77,7 +72,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     private List<Item> filterItems(Predicate<Item> predicate, List<Item> items) {
         List<Item> copyToProcess = new ArrayList<>(items);
-        copyToProcess.removeIf(predicate);
+        copyToProcess.removeIf(predicate.negate());
         return copyToProcess;
     }
 }

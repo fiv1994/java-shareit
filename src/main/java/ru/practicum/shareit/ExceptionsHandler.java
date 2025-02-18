@@ -1,6 +1,5 @@
 package ru.practicum.shareit;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,35 +19,35 @@ public class ExceptionsHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public Map<String, String> requestParamExceptionsHandler(RequestParamIncorrectOrAbsentException exc) {
+    public Map<String, String> handleBadRequestException(RequestParamIncorrectOrAbsentException exc) {
         log.warn(EXCEPTION_CAUGHT_MESSAGE, exc);
         return Map.of("error", exc.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
-    public Map<String, String> notFoundExceptionsHandler(NotFoundException exc) {
+    public Map<String, String> handleNotFoundException(NotFoundException exc) {
         log.warn(EXCEPTION_CAUGHT_MESSAGE, exc);
         return Map.of("error", exc.getMessage());
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
-    public Map<String, String> accessDeniedExceptionsHandler(AccessDeniedException exc) {
+    public Map<String, String> handleAccessDeniedException(AccessDeniedException exc) {
         log.warn(EXCEPTION_CAUGHT_MESSAGE, exc);
         return Map.of("error", exc.getMessage());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler
-    public Map<String, String> emailBusyExceptionsHandler(EmailBusyException exc) {
+    public Map<String, String> handleEmailBusyException(EmailBusyException exc) {
         log.warn(EXCEPTION_CAUGHT_MESSAGE, exc);
         return Map.of("error", exc.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
-    public Map<String, String> otherExceptionsHandler(Throwable exc) {
+    public Map<String, String> handleOtherExceptions(Throwable exc) {
         log.warn(EXCEPTION_CAUGHT_MESSAGE, exc);
         return Map.of("error", "Произошла ошибка на сервере.");
     }
