@@ -51,11 +51,11 @@ public class UserValidator {
         //Проверка, что поле с почтой в запросе не пустое
         boolean condition1 = !isStringEmptyInJson(email);
 
-        //Проверка, что почта соответствует шаблону
+        // Проверка, что почта соответствует шаблону
         String emailRegExp = "[\\w\\.]+@[a-z0-9]+\\.[a-z][a-z]+";
         boolean condition2 = email.matches(emailRegExp);
 
-        //Проверка, что почта не занята
+        // Проверка, что почта не занята
         boolean condition3;
         Optional<User> userFoundByMail = userRepository.findByEmail(email);
         if (userId == 0) {
