@@ -27,6 +27,12 @@ public class BookingsValidator {
         userValidator.validateExists(userId);
         validateItemAvailable(itemId);
         validateStartAndEnd(booking.getStart(), booking.getEnd(), itemId);
+        // Проверка, что пользователь не является владельцем вещи
+        long itemOwnerId = itemRepository.findById(itemId).get().getOwner().getId();
+        if (itemOwnerId == userId) {
+            String excMessage = String.format("User (id = %d) cannot book their own item (itemId = %d)", userId, itemId);
+            throw new AccessDeniedException(excMessage);
+        }
     }
 
     public void validateBookingToPermitOrReject(long bookingId, long userId) {

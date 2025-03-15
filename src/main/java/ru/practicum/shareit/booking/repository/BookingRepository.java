@@ -29,6 +29,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             FROM bookings
             WHERE item_id IN :itemIds
             AND NOT start_timestamp > :now
+            AND status NOT IN ('WAITING', 'REJECTED')  -- Фильтрация по статусам
             GROUP BY item_id;
             """,
             nativeQuery = true)
@@ -41,6 +42,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             FROM bookings
             WHERE item_id IN :itemIds
             AND start_timestamp > :now
+            AND status NOT IN ('WAITING', 'REJECTED')  -- Фильтрация по статусам
             GROUP BY item_id;
             """,
             nativeQuery = true)

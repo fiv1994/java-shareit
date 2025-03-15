@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     item_id INTEGER REFERENCES items (id) ON DELETE SET NULL,
     start_timestamp TIMESTAMP NOT NULL,
     end_timestamp TIMESTAMP NOT NULL,
-    status INTEGER NOT NULL
+    status TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comments (

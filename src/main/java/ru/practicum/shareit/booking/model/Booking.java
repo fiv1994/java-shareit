@@ -33,6 +33,6 @@ public class Booking {
     @Column(name = "end_timestamp")
     private LocalDateTime end;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
 }
