@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -34,7 +36,7 @@ public class UserValidator {
 
     public void validateExists(long id) {
         NotFoundException exc = new NotFoundException(String.format("User with id = %d not found.", id));
-        throwExceptionIfTrue(userRepository.get(id) == null, exc);
+        throwExceptionIfTrue(!userRepository.existsById(id), exc);
     }
 
     private void validateName(String userName) {
@@ -49,17 +51,17 @@ public class UserValidator {
         //Проверка, что поле с почтой в запросе не пустое
         boolean condition1 = !isStringEmptyInJson(email);
 
-        //Проверка, что почта соответствует шаблону
+        // Проверка, что почта соответствует шаблону
         String emailRegExp = "[\\w\\.]+@[a-z0-9]+\\.[a-z][a-z]+";
         boolean condition2 = email.matches(emailRegExp);
 
-        //Проверка, что почта не занята
+        // Проверка, что почта не занята
         boolean condition3;
-        User userFoundByMail = userRepository.get(email);
+        Optional<User> userFoundByMail = userRepository.findByEmail(email);
         if (userId == 0) {
-            condition3 = userFoundByMail == null;
+            condition3 = userFoundByMail.isEmpty();
         } else {
-            condition3 = userFoundByMail == null || userFoundByMail.getId() == userId;
+            condition3 = userFoundByMail.isEmpty() || userFoundByMail.get().getId() == userId;
         }
 
         String errorMessage = "";

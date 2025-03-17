@@ -18,14 +18,14 @@ public class UserServiceImpl implements UserService {
         log.debug("Launched UserService#createUser(...)");
         userValidator.validateNewUser(user);
         log.debug("Ended UserService#createUser(...)");
-        return userRepository.create(user);
+        return userRepository.save(user);
     }
 
     public User getUser(long id) {
         log.debug("Launched UserService#getUser(...)");
         userValidator.validateExists(id);
         log.debug("Ended UserService#getUser(...)");
-        return userRepository.get(id);
+        return userRepository.findById(id).get();
     }
 
     public User patchUser(User user) {
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         userValidator.validatePatchedUser(user);
 
         long userId = user.getId();
-        User userFromStorage = userRepository.get(userId);
+        User userFromStorage = userRepository.findById(userId).get();
         if (user.getEmail() == null) {
             user.setEmail(userFromStorage.getEmail());
         }
@@ -43,13 +43,13 @@ public class UserServiceImpl implements UserService {
         }
 
         log.debug("Ended UserService#patchUser(...)");
-        return userRepository.update(user);
+        return userRepository.save(user);
     }
 
     public void deleteUser(long id) {
         log.debug("Launched UserService#deleteUser(...)");
         userValidator.validateExists(id);
-        userRepository.remove(id);
+        userRepository.deleteById(id);
         log.debug("Ended UserService#deleteUser(...)");
     }
 }

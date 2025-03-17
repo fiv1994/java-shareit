@@ -3,8 +3,12 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.CommentsRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.item.service.validation.CommentsValidator;
+import ru.practicum.shareit.item.service.validation.ItemValidator;
 import ru.practicum.shareit.user.service.validation.UserValidator;
 
 import java.util.List;
@@ -16,11 +20,13 @@ public class ItemServiceImpl implements ItemService {
     private final ItemValidator itemValidator;
     private final UserValidator userValidator;
     private final ItemRepository itemRepository;
+    private final CommentsRepository commentsRepository;
+    private final CommentsValidator commentsValidator;
 
     public Item createItem(Item item) {
         log.debug("Launched ItemService#createItem(...)");
         itemValidator.validateNewItem(item);
-        Item createdItem = itemRepository.create(item);
+        Item createdItem = itemRepository.save(item);
         log.debug("Ended ItemService#createItem(...)");
         return createdItem;
     }
@@ -30,8 +36,9 @@ public class ItemServiceImpl implements ItemService {
         itemValidator.validatePatchedItem(item, userId);
 
         long itemId = item.getId();
-        Item itemFromStorage = itemRepository.get(itemId);
-        item.setOwnerId(itemFromStorage.getOwnerId());
+        Item itemFromStorage = itemRepository.findById(itemId).get();
+        item.setOwner(itemFromStorage.getOwner());
+
         if (item.getName() == null) {
             item.setName(itemFromStorage.getName());
         }
@@ -42,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(itemFromStorage.getAvailable());
         }
 
-        Item patchedItem = itemRepository.update(item);
+        Item patchedItem = itemRepository.save(item);
         log.debug("Ended ItemService#patchItem(...)");
         return patchedItem;
     }
@@ -51,13 +58,13 @@ public class ItemServiceImpl implements ItemService {
         log.debug("Launched ItemService#getItem(...)");
         itemValidator.validateExists(id);
         log.debug("Ended ItemService#getItem(...)");
-        return itemRepository.get(id);
+        return itemRepository.findById(id).get();
     }
 
     public List<Item> getItemsOfUser(long userId) {
         log.debug("Launched ItemService#getItemsOfUser(...)");
         userValidator.validateExists(userId);
-        List<Item> itemsOfUser = itemRepository.getAll(userId);
+        List<Item> itemsOfUser = itemRepository.findByOwnerId(userId);
         log.debug("Ended ItemService#getItemOfUser(...)");
         return itemsOfUser;
     }
@@ -68,9 +75,17 @@ public class ItemServiceImpl implements ItemService {
         if (text.isEmpty()) {
             availableItems = List.of();
         } else {
-            availableItems = itemRepository.searchItems(text);
+            availableItems = itemRepository.findAvailableWhoseNameOrDescContainsText(text);
         }
         log.debug("Ended ItemService#searchAvailableItems(...)");
         return availableItems;
+    }
+
+    public Comment createComment(Comment comment) {
+        log.debug("Launched ItemService#createComment(...)");
+        commentsValidator.validateNewComment(comment);
+        Comment result = commentsRepository.save(comment);
+        log.debug("Ended ItemService#createComment(...)");
+        return result;
     }
 }
