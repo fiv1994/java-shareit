@@ -1,0 +1,24 @@
+logging.level.org.springframework:
+  orm.jpa: INFO
+  org.jpa.JpaTransactionManager: DEBUG
+  transaction: INFO
+  transaction.interceptor: TRACE
+
+server.port: 9090
+
+spring:
+  application.name: ShareIt
+  main.banner-mode: OFF
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC+3
+        ddl-auto: none
+        format_sql: true
+  datasource:
+    username: "dbuser"
+    password: "12345"
+    url: "jdbc:postgresql://localhost:5432/shareit"
+    driver-class-name: "org.postgresql.Driver"
+  sql.init.mode: always
