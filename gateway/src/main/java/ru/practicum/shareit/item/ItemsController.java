@@ -44,6 +44,7 @@ public class ItemsController {
         log.info("Started request handling by ItemController#patchItem(...)");
         validateStringNotBlank(item.getName());
         validateStringNotBlank(item.getDescription());
+        validateItemFields(item);
         return itemsClient.patchItem(itemIdString, userId, item);
     }
 
@@ -63,5 +64,14 @@ public class ItemsController {
     ) {
         log.info("Started request handling by ItemController#createComment(...)");
         return itemsClient.createComment(itemId, userId, comment);
+    }
+
+    private void validateItemFields(Item item) {
+        if (item.getName() == null || item.getName().isBlank()) {
+            throw new IllegalArgumentException("Item name must not be blank");
+        }
+        if (item.getDescription() == null || item.getDescription().isBlank()) {
+            throw new IllegalArgumentException("Item description must not be blank");
+        }
     }
 }

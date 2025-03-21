@@ -30,9 +30,11 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getRequestsNotFromUser(@RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Started request handling by ItemRequestController#getRequestsNotFromUser(...)");
-        return itemRequestClient.getRequestsNotFromUser(userId);
+    public ResponseEntity<Object> getRequestsNotFromUser(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                        @RequestParam(defaultValue = "0") int from,
+                                                        @RequestParam(defaultValue = "10") int size) {
+        log.info("Started request handling by ItemRequestController#getRequestsNotFromUser (...)");
+        return itemRequestClient.getRequestsNotFromUser (userId, from, size);
     }
 
     @GetMapping("/{requestId}")

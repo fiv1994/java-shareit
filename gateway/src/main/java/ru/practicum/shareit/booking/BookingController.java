@@ -42,15 +42,15 @@ public class BookingController {
     @GetMapping
     public ResponseEntity<Object> getUsersBookingsInAscOrder(@RequestHeader("X-Sharer-User-Id") long userId,
                                                              @RequestParam(defaultValue = "ALL") String state) {
-        log.info("Started request handling by BookingController#getUsersBookingsInAscOrder(...)");
-        return bookingClient.getUsersBookingsInAscOrder(userId, state);
+        log.info("Started request handling by BookingController#getUsersBookingsByState(...)");
+        return bookingClient.getUsersBookingsByState(userId, state);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsOfUsersItemsInAscOrder(
             @RequestHeader("X-Sharer-User-Id") long userId,
             @RequestParam(defaultValue = "ALL") String state) {
-        log.info("Started request handling by BookingController#getBookingsOfUsersItemsInAscOrder(...)");
-        return bookingClient.getBookingsOfUsersItemsInAscOrder(userId, state);
+        log.info("Started request handling by BookingController#getBookingsOfUsersItemsByState(...)");
+        return bookingClient.getBookingsOfUsersItemsByState(userId, state);
     }
 }

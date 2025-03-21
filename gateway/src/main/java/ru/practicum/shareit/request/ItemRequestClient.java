@@ -29,8 +29,8 @@ public class ItemRequestClient extends BaseClient {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> getRequestsNotFromUser(long userId) {
-        return get("all", userId);
+    public ResponseEntity<Object> getRequestsNotFromUser (long userId, int from, int size) {
+        return get("all?from=" + from + "&size=" + size, userId);
     }
 
     public ResponseEntity<Object> getItemRequest(long userId, long requestId) {
