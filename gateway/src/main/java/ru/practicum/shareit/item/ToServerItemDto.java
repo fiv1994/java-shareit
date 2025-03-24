@@ -11,7 +11,6 @@ public class ToServerItemDto {
 
     private User owner;
 
-
     @NotBlank(message = "Name of item can not be blank.")
     private String name;
 

@@ -39,13 +39,21 @@ public class ItemsController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> patchItem(@PathVariable("itemId") String itemIdString,
                                             @RequestHeader("X-Sharer-User-Id") long userId,
-                                            @RequestBody Item item
-    ) {
+                                            @RequestBody UpdateItemDto itemDto) {
         log.info("Started request handling by ItemController#patchItem(...)");
-        validateStringNotBlank(item.getName());
-        validateStringNotBlank(item.getDescription());
-        validateItemFields(item);
-        return itemsClient.patchItem(itemIdString, userId, item);
+
+        if (itemIdString == null || itemIdString.isBlank()) {
+            throw new IllegalArgumentException("Item ID must not be blank");
+        }
+
+        long itemId;
+        try {
+            itemId = Long.parseLong(itemIdString);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid Item ID format: must be a number", e);
+        }
+
+        return itemsClient.patchItem(String.valueOf(itemId), userId, itemDto);
     }
 
     @GetMapping("/search")
