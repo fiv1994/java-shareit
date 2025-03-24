@@ -34,7 +34,7 @@ public class ItemRequestController {
                                                         @RequestParam(defaultValue = "0") int from,
                                                         @RequestParam(defaultValue = "10") int size) {
         log.info("Started request handling by ItemRequestController#getRequestsNotFromUser (...)");
-        return itemRequestClient.getRequestsNotFromUser (userId, from, size);
+        return itemRequestClient.getRequestsNotFromUser(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
